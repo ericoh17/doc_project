@@ -1,15 +1,9 @@
----
-title: "Doc data overview"
-author: "Eric Oh"
-date: "8/13/2019" 
-output: rmarkdown::github_document
----
+Doc data overview
+================
+Eric Oh
+8/13/2019
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r}
+``` r
 library(ggplot2)
 library(ggthemes)
 
@@ -17,9 +11,10 @@ doc_dat <- read.csv("~/Dropbox/doc_project/data/johnson_doc_data/PhilaLegalZip-T
 #doc_dat2 <- read.csv("~/Dropbox/doc_project/johnson_doc_data/PhilaCommittingCounty-Table 1.csv")
 ```
 
-# Zip codes
+Zip codes
+=========
 
-```{r}
+``` r
 zip_code_freq <- data.frame(table(doc_dat$legal_zip_code))
 colnames(zip_code_freq) <- c("Zip_code", "Frequency")
 zip_code_freq <- zip_code_freq[order(zip_code_freq$Frequency,
@@ -27,9 +22,10 @@ zip_code_freq <- zip_code_freq[order(zip_code_freq$Frequency,
 zip_code_freq$Percent <- (zip_code_freq$Frequency / sum(zip_code_freq$Frequency)) * 100
 ```
 
-## Zip code plot
+Zip code plot
+-------------
 
-```{r}
+``` r
 zip_code_plot_dat <- zip_code_freq[zip_code_freq$Frequency >= 1000,]
 
 zip_code_others <- data.frame(Zip_code = "Other",
@@ -47,10 +43,12 @@ ggplot(zip_code_plot_dat, aes(x = Zip_code, y = Frequency)) +
   theme_hc()
 ```
 
+![](doc_data_overview_files/figure-markdown_github/unnamed-chunk-3-1.png)
 
-# Race
+Race
+====
 
-```{r}
+``` r
 race_freq <- data.frame(table(doc_dat$race))
 colnames(race_freq) <- c("Race", "Frequency")
 race_freq <- race_freq[order(race_freq$Frequency,
@@ -58,10 +56,10 @@ race_freq <- race_freq[order(race_freq$Frequency,
 race_freq$Percent <- (race_freq$Frequency / sum(race_freq$Frequency)) * 100
 ```
 
+Sex
+===
 
-# Sex
-
-```{r}
+``` r
 sex_freq <- data.frame(table(doc_dat$sex))
 colnames(sex_freq) <- c("Sex", "Frequency")
 sex_freq <- sex_freq[order(sex_freq$Frequency,
@@ -69,14 +67,14 @@ sex_freq <- sex_freq[order(sex_freq$Frequency,
 sex_freq$Percent <- (sex_freq$Frequency / sum(sex_freq$Frequency)) * 100
 ```
 
-
-# Offenses
+Offenses
+========
 
 More unique offense codes than offenses..what is going on?
 
 Separate into violent and non-violent crime? Add other category? What is difference between general and non-general (ie. robbery (general) vs robbery)?
 
-```{r}
+``` r
 offense_freq <- data.frame(table(doc_dat$offense))
 colnames(offense_freq) <- c("Offense", "Frequency")
 offense_freq <- offense_freq[order(offense_freq$Frequency,
@@ -84,9 +82,10 @@ offense_freq <- offense_freq[order(offense_freq$Frequency,
 offense_freq$Percent <- (offense_freq$Frequency / sum(offense_freq$Frequency)) * 100
 ```
 
-## Offenses plot
+Offenses plot
+-------------
 
-```{r}
+``` r
 offense_plot_dat <- offense_freq[offense_freq$Frequency >= 1000,]
 
 #offense_others <- data.frame(Offense = "Other",
@@ -110,10 +109,12 @@ ggplot(offense_plot_dat, aes(x = Offense, y = Frequency)) +
   theme_hc()
 ```
 
+![](doc_data_overview_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
-# Priors
+Priors
+======
 
-```{r}
+``` r
 prior_freq <- data.frame(table(doc_dat$Prior.Incs))
 colnames(prior_freq) <- c("Prior_incarcerations", "Frequency")
 prior_freq <- prior_freq[order(prior_freq$Frequency,
@@ -121,9 +122,10 @@ prior_freq <- prior_freq[order(prior_freq$Frequency,
 prior_freq$Percent <- (prior_freq$Frequency / sum(prior_freq$Frequency)) * 100
 ```
 
-## Priors plot
+Priors plot
+-----------
 
-```{r}
+``` r
 prior_plot_dat <- prior_freq[prior_freq$Frequency >= 297,]
 
 prior_others <- data.frame(Prior_incarcerations = ">7",
@@ -141,4 +143,4 @@ ggplot(prior_plot_dat, aes(x = Prior_incarcerations, y = Frequency)) +
   theme_hc()
 ```
 
-
+![](doc_data_overview_files/figure-markdown_github/unnamed-chunk-9-1.png)
