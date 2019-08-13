@@ -1,3 +1,3 @@
 data/
-doc_data_overview_files/
 .DS_Store
+*.Rmd
