@@ -23,6 +23,7 @@ suppressMessages(suppressWarnings(library(rgdal)))
 suppressMessages(suppressWarnings(library(ggmap)))
 suppressMessages(suppressWarnings(library(maptools)))
 suppressMessages(suppressWarnings(library(cowplot)))
+#suppressMessages(suppressWarnings(library(spdep)))
 
 doc_dat <- read.csv("~/Dropbox/doc_project/data/johnson_doc_data/PhilaLegalZip-Table 1.csv")
 ```

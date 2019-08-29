@@ -1,0 +1,83 @@
+---
+title: "doc_car_model"
+author: "Eric Oh"
+date: "8/26/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo = FALSE}
+suppressMessages(suppressWarnings(library(spdep)))
+suppressMessages(suppressWarnings(library(rgdal)))
+suppressMessages(suppressWarnings(library(ggplot2)))
+suppressMessages(suppressWarnings(library(gdata)))
+suppressMessages(suppressWarnings(library(readxl)))
+
+options(scipen = 999)
+```
+
+
+```{r, echo = FALSE}
+philly_zip_shape <- readOGR("~/Dropbox/doc_project/Zipcodes_Poly",
+                            "Zipcodes_Poly",
+                            stringsAsFactors = FALSE)
+
+# require connected edge to be
+# considered a neighborhood (queen = F)
+philly_nb <- poly2nb(philly_zip_shape,
+                     queen = FALSE,
+                     row.names = philly_zip_shape$CODE)
+
+philly_nb_listw <- nb2listw(philly_nb, style = "B",
+                            zero.policy = TRUE)
+
+doc_dat <- read.csv("~/Dropbox/doc_project/data/johnson_doc_data/PhilaLegalZip-Table 1.csv")
+
+# get total number of releases in each zip code
+num_offense_zip <- doc_dat %>%
+  group_by(legal_zip_code) %>%
+  summarise(count = n()) %>%
+  as.data.frame()
+
+num_offense_zip <- num_offense_zip[num_offense_zip$legal_zip_code %in% philly_zip_shape$CODE,]
+num_offense_zip$legal_zip_code <- reorder.factor(num_offense_zip$legal_zip_code,
+                                                 new.order = c(philly_zip_shape$CODE))
+
+num_offense_zip <- arrange(num_offense_zip, legal_zip_code)
+
+# test for spatial autocorrelation
+num_offense_moran_i <- moran.test(num_offense_zip$count,
+                                  philly_nb_listw)
+
+num_offense_moran_i_mc <- moran.mc(num_offense_zip$count,
+                                   philly_nb_listw,
+                                   nsim = 500)
+
+#philly_zip_shape_df <- fortify(philly_zip_shape, region = "CODE")
+#philly_zip_agg_df <- aggregate(.~id, philly_zip_shape_df, FUN = head, 1)
+
+#philly_zip_agg_df <- merge(philly_zip_agg_df,
+#                           num_offense_zip,
+#                           by.x = "id", by.y = "legal_zip_code",
+#                           all.x = TRUE)
+
+
+
+
+```
+
+
+```{r}
+# get number of releases by zip code and year
+num_offense_zip_year  <- doc_dat %>%
+  group_by(legal_zip_code, ReleaseYear) %>%
+  summarise(count = n()) %>%
+  as.data.frame()
+
+
+
+```
+
