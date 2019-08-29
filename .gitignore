@@ -4,3 +4,4 @@ cleaned_data/
 *.html
 Zipcodes_Poly/
 *.csv
+.Rhistory
