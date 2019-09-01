@@ -11,5 +11,6 @@ data scientist capacity.
 For an overview of the data, including descriptive statistics and 
 some visualizations, check out [doc_data_overview.md](https://github.com/ericoh17/doc_project/blob/master/doc_data_overview.md).
 
-See doc_car_model.md
+See [doc_car_model.md](https://github.com/ericoh17/doc_project/blob/master/doc_car_model.md) for 
+a description of the Bayesian spatial model. 
 
