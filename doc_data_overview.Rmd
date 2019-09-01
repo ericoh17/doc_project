@@ -135,6 +135,9 @@ ggplot(philly_map_num_offenses_df,
         plot.background = element_blank())
 ```
 
+
+There seems to be quite a bit of spatial autocorrelation between the number of offenses in neighboring zip codes. 
+
 # Race
 
 Let's take a look at the distribution of different races amongst all offenses.
@@ -389,11 +392,15 @@ ggplot(philly_map_assault_releases_df,
         panel.grid.minor = element_blank(),
         plot.background = element_blank()) -> philly_map_assault_releases
 
+print(philly_map_drug_releases)
+print(philly_map_robbery_releases)
+print(philly_map_assault_releases)
 
-plot_grid(philly_map_drug_releases,
-          philly_map_robbery_releases,
-          philly_map_assault_releases,
-          nrow = 2, ncol = 2)
+
+#plot_grid(philly_map_drug_releases,
+#          philly_map_robbery_releases,
+#          philly_map_assault_releases,
+#          nrow = 2, ncol = 2)
 ```
 
 
@@ -612,8 +619,11 @@ ggplot(philly_map_prop_sentence_served_df,
         panel.grid.minor = element_blank(),
         plot.background = element_blank()) -> philly_map_sent_served
 
-plot_grid(philly_map_sentence_length,
-          philly_map_sent_served,
-          nrow = 1)
+print(philly_map_sentence_length)
+print(philly_map_sent_served)
+
+#plot_grid(philly_map_sentence_length,
+#          philly_map_sent_served,
+#          nrow = 1)
 ```
 

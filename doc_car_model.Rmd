@@ -15,12 +15,21 @@ suppressMessages(suppressWarnings(library(rgdal)))
 suppressMessages(suppressWarnings(library(ggplot2)))
 suppressMessages(suppressWarnings(library(gdata)))
 suppressMessages(suppressWarnings(library(readxl)))
+suppressMessages(suppressWarnings(library(dplyr)))
 
 options(scipen = 999)
 ```
 
+We noticed in [doc_data_overview.md](https://github.com/ericoh17/doc_project/blob/master/doc_data_overview.md) that there was evidence of spatial correlation in number of releases between neighboring zip codes through Philadelphia. Accounting for this spatial correlation is the focus of the current modeling work. 
 
-```{r, echo = FALSE}
+One of the standard statistics used to assess the strength of this spatial correlation is Moran's $I$, which is defined as
+
+$$
+I = \frac{n}{\sum_i \sum_j w_{ij}}\frac{\sum_i \sum_j w_{ij}(X_i-\bar{X})(X_j-\bar{X})}{\sum_i (X_i-\bar{X})^2}
+$$
+where $$w_{ij}$$ is 1 if zip codes i and j share a border and 0 otherwise. 
+
+```{r, echo = FALSE, comment = NA, message = FALSE}
 philly_zip_shape <- readOGR("~/Dropbox/doc_project/Zipcodes_Poly",
                             "Zipcodes_Poly",
                             stringsAsFactors = FALSE)
@@ -52,32 +61,17 @@ num_offense_zip <- arrange(num_offense_zip, legal_zip_code)
 num_offense_moran_i <- moran.test(num_offense_zip$count,
                                   philly_nb_listw)
 
-num_offense_moran_i_mc <- moran.mc(num_offense_zip$count,
-                                   philly_nb_listw,
-                                   nsim = 500)
-
-#philly_zip_shape_df <- fortify(philly_zip_shape, region = "CODE")
-#philly_zip_agg_df <- aggregate(.~id, philly_zip_shape_df, FUN = head, 1)
-
-#philly_zip_agg_df <- merge(philly_zip_agg_df,
-#                           num_offense_zip,
-#                           by.x = "id", by.y = "legal_zip_code",
-#                           all.x = TRUE)
-
-
-
+print(num_offense_moran_i)
 
 ```
 
+We can use Moran's I to perform testing for spatial correlation under the null hypothesis that there is no spatial correlation. Calculating Moran's I on the total number of releases in each zip code from 2007 - 2016 yields a statistic of $0.3878$, compared to a null mean of $-0.0213$ and standard error of $0.0075$, suggesting a high amount of spatial correlation in the number of releases between zip codes. 
+
+To account for zip code level covariates, we merge the DOC data with the Census Bureau's American Community Survey, containing information about poverty and income levels for Census tract groups. For more detail on how this was done, see [link_doc_census.R](https://github.com/ericoh17/doc_project/link_doc_census.R). 
 
 ```{r}
-# get number of releases by zip code and year
-num_offense_zip_year  <- doc_dat %>%
-  group_by(legal_zip_code, ReleaseYear) %>%
-  summarise(count = n()) %>%
-  as.data.frame()
-
-
+# load in data with covariates from census
+load("~/Dropbox/doc_project/cleaned_data/release_by_zip_year_cov.RData")
 
 ```
 

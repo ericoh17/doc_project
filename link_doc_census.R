@@ -1,4 +1,7 @@
 
+# script to create covariates from the census data
+# and merge with the DOC data
+
 suppressMessages(suppressWarnings(library(readxl)))
 suppressMessages(suppressWarnings(library(dplyr)))
 suppressMessages(suppressWarnings(library(tidyr)))

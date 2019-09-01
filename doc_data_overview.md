@@ -26,6 +26,8 @@ The number of releases in 19124 seems to have decreased through the years, thoug
 
 <img src="doc_data_overview_files/figure-markdown_github/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
 
+There seems to be quite a bit of spatial autocorrelation between the number of offenses in neighboring zip codes.
+
 Race
 ====
 
@@ -57,7 +59,7 @@ From before, we know that 19124, 19132, 19133, 19134, and 19140 had the highest 
 
 In all of the five zip codes, we see that the three most common offenses were drug sales, robbery, and assault. Let's see the distribution of these offenses across all Philadelphia zip codes.
 
-<img src="doc_data_overview_files/figure-markdown_github/unnamed-chunk-15-1.png" style="display: block; margin: auto;" />
+<img src="doc_data_overview_files/figure-markdown_github/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /><img src="doc_data_overview_files/figure-markdown_github/unnamed-chunk-15-2.png" style="display: block; margin: auto;" /><img src="doc_data_overview_files/figure-markdown_github/unnamed-chunk-15-3.png" style="display: block; margin: auto;" />
 
 We can also classify the offenses into violent or non-violent. We consider violent crimes to be robbery, assault, murder, rape, manslaughter, homicide, kidnapping, or any other crimes resulting in bodily injury or death. We plot the number of violent and non-violent offense releases over time.
 
@@ -87,4 +89,4 @@ Below are boxplots of proportion of maximum sentence served in the top five zip 
 
 Now let's compare the sentence lengths and proportion of maximum sentence served across all Philadelphia zip codes.
 
-<img src="doc_data_overview_files/figure-markdown_github/unnamed-chunk-24-1.png" style="display: block; margin: auto;" />
+<img src="doc_data_overview_files/figure-markdown_github/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /><img src="doc_data_overview_files/figure-markdown_github/unnamed-chunk-24-2.png" style="display: block; margin: auto;" />
