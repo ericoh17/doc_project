@@ -1,4 +1,4 @@
-# Department of Corrections project
+# Philadelphia Neighborhood Incarceration
 
 This repo contains some exploratory work and preliminary modeling
 of data from Philadelphia Department of Corrections (DOC) on 
