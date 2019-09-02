@@ -1,5 +1,5 @@
 ---
-title: "doc_car_model"
+title: "DOC CAR model"
 author: "Eric Oh"
 date: "8/26/2019"
 output: github_document
