@@ -64,7 +64,16 @@ For more detail on how all of the above was done, see [link\_doc\_census.R](http
 CAR priors to account for spatial correlation
 =============================================
 
-Conditional autoregressive (CAR) priors
+Conditional autoregressive (CAR) models are commonly used as prior distributions for spatially correlated random effects with areal spatial data. Let *Γ* = (*γ*<sub>1</sub>, …, *γ*<sub>*n*</sub>)′ be a vector of random elements for n areal locations that are spatially correlated. The CAR model can then be represented using conditional distributions:
+
+$$
+\\gamma\_i | \\gamma\_j, j \\neq i  \\sim \\text{N}\\left(\\rho\\sum\_{j=1}^n w\_{ij}\\gamma\_j, \\tau\_i^{-1}\\right)
+$$
+ where *w*<sub>*i**j*</sub> are weights equal to 1 if zip codes *i* and *j* share a border and 0 otherwise and *τ*<sub>*i*</sub> is a spatially varying precision parameter.
+
+It can be proved using Brook's Lemma that the joint distribution of *Γ* is given by
+
+*Γ* ∼ N(0,\[*D*<sub>*τ*</sub>(*I*−*ρ**B*)\]<sup>−1</sup>)
 
 Implementation in Stan
 ======================
