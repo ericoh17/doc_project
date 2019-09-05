@@ -48,7 +48,18 @@ where *y*<sub>*i**t*</sub> is the number of releases in zip code *i* at time *t*
 Zip code level predictors
 =========================
 
-To account for zip code level covariates, we merge the DOC data with the Census Bureau's American Community Survey, containing information about poverty and income levels for Census tract groups. For more detail on how this was done, see [link\_doc\_census.R](https://github.com/ericoh17/doc_project/blob/master/link_doc_census.R).
+We want our model to account for zip code level predictors that might be predictive of the number of releases. To do so, we merge the DOC data with the Census Bureau's American Community Survey, containing information about poverty and income levels for Census tract groups. We utilize [crosswalk files](https://www.huduser.gov/portal/datasets/usps_crosswalk.html) from the U.S. Department of Housing and Urban Development's Office of Policy Development and Research to relate Philadelphia zip codes to Census tract groups.
+
+From the American Community Survey (ACS), we obtain information about the proportion of households in various states of poverty. Specifically, the ACS has data on the proportion of the population in seven different brackets of income-to-poverty line ratios: \[0, 0.5), \[0.5, 1), \[1, 1.25), \[1.25, 1.5), \[1.5, 1.85), \[1.85, 2), and \[2+). For example, the \[0.5, 1) bracket represents families with income between 50% of the poverty line and the poverty line, where the poverty line is determined by the Census Bureau according to the size and number of children of a household.
+
+From this poverty data, we create a single measure of poverty for each zip code by calculating a weighted sum of the proportion of households in each of the seven poverty brackets:
+
+$$
+\\text{poverty}\_{i} = \\sum\_{j=1}^7 w\_j q\_{i,j}
+$$
+ *q*<sub>*i*, *j*</sub> is the proportion of households in zip code *i* that are in poverty bracket *j* and *w*<sub>*j*</sub> is the weight given to poverty bracket *j*. We use decreasing weights w = \[1, 5/6, 4/6, 3/6, 2/6, 1/6, 0\] to give higher poverty brackets more weight. Thus, the poverty measure ranges from 0 to 1, with higher values indicating a higher level of poverty.
+
+For more detail on how all of the above was done, see [link\_doc\_census.R](https://github.com/ericoh17/doc_project/blob/master/link_doc_census.R).
 
 CAR priors to account for spatial correlation
 =============================================
