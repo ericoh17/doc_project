@@ -37,11 +37,13 @@ We can use Moran's I to perform testing for spatial correlation under the null h
 Counts of incarcerated person releases
 ======================================
 
-Discuss the outliers with huge number of releases. Model on log scale
+As seen in [doc\_data\_overview.md](https://github.com/ericoh17/doc_project/blob/master/doc_data_overview.md) the number of releases across Philadelphia zip codes seems to be quite skewed due to some zip codes having a higher number of releases relative to others. One classical method to handle such skewed data is to take a log transformation of the count of releases. However, there are a number of zip codes in some years with zero releases, meaning we must consider a different transformation that is defined at zero. Thus, we decided to use the inverse hyperbolic sine transformation
 
-Also, some zip codes in some years have 0 counts, meaning we have to handle this using inverse hyperbolic sine transformation?
+$$
+\\tilde{y}\_{it} = \\log\\left(y\_{it} + \\sqrt{y\_{it}^2 + 1}\\right) - \\log(2)
+$$
 
-Interpret as percent changes in releases.
+where *y*<sub>*i**t*</sub> is the number of releases in zip code *i* at time *t* and log(2) is subtracted to center the transformed values. The inverse hyperbolic sine transformation has the additional benefit that it can be interpreted the same way as a standard log transformation. Specifically, changes in the transformed number of releases can be interpreted as percent changes in the raw number of releases.
 
 Zip code level predictors
 =========================
