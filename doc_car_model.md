@@ -74,6 +74,16 @@ $$
 It can be proved using Brook's Lemma that the joint distribution of *Γ* is given by
 
 *Γ* ∼ N(0,\[*D*<sub>*τ*</sub>(*I*−*ρ**B*)\]<sup>−1</sup>)
+ where:
+
+Full Bayesian model
+===================
+
+$$
+\\tilde{y}\_{it} = \\alpha + \\textbf{x}'\_i \\beta + \\epsilon\_{it}
+$$
+
+where *x*<sub>*i*</sub>′ is a design vector of predictor variables for zip code *i* and *β* is the vector of coefficients for those predictor variables.
 
 Implementation in Stan
 ======================
