@@ -117,6 +117,15 @@ It can be proved using Brook's Lemma that the joint distribution of $\Gamma$ is 
 $$
 \Gamma \sim \text{N}\left(0, [D_{\tau}(I-\rho B)]^{-1}\right)
 $$
+where:
+
+# Full Bayesian model
+
+$$
+\tilde{y}_{it} = \alpha + \textbf{x}'_i \beta + \epsilon_{it}
+$$
+
+where $x_i'$ is a design vector of predictor variables for zip code $i$ and $\beta$ is the vector of coefficients for those predictor variables. 
 
 # Implementation in Stan
 
