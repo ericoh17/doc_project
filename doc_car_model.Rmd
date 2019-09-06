@@ -2,7 +2,7 @@
 title: "DOC CAR model"
 author: "Eric Oh"
 date: "8/26/2019"
-output: github_document
+output: latex_document
 ---
 
 ```{r setup, include=FALSE}
