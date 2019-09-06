@@ -2,7 +2,7 @@
 title: "DOC CAR model"
 author: "Eric Oh"
 date: "8/26/2019"
-output: latex_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -118,6 +118,12 @@ $$
 \Gamma \sim \text{N}\left(0, [D_{\tau}(I-\rho B)]^{-1}\right)
 $$
 where:
+* $D_{\tau} = \tau D$
+* $D = diag(m_i)$: an $n \times n$ diagonal matrix with $m_i=$ the number of neighbors for zip code $i$
+* $I$: an $n \times n$ identity matrix
+* $\rho$: parameter controlling spatial dependence ($\rho=0$ implies spatial independence and $\rho=1$ results in an intrinsic conditional autoregressive model)
+* $B=D^{-1}W$, the scaled adajency matrix
+* $W$: the adajency matrix ($w_{ii}=0, $W_{ij}=1$ if neighbor; 0 otherwise)
 
 # Full Bayesian model
 
