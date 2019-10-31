@@ -68,7 +68,7 @@ Conditional autoregressive (CAR) models are commonly used as prior distributions
 $$
 \gamma_i | \gamma_j, j \neq i  \sim \text{N}\left(\rho\sum_{j=1}^n w_{ij}\gamma_j, \tau_i^{-1}\right)
 $$
- where $w_{ij}$ are weights equal to 1 if zip codes $i$ and $j$ share a border and 0 otherwise and $\tau_i$ is a spatially varying precision parameter.
+where $w_{ij}$ are weights equal to 1 if zip codes $i$ and $j$ share a border and 0 otherwise and $\tau_i$ is a spatially varying precision parameter.
 
 It can be proved using Brook's Lemma that the joint distribution of $\Gamma$ is given by
 

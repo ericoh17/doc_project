@@ -125,18 +125,111 @@ where:
 * $B=D^{-1}W$, the scaled adajency matrix
 * $W$: the adajency matrix ($w_{ii}=0, $W_{ij}=1$ if neighbor; 0 otherwise)
 
+We can then write the CAR prior as:
+
+$$
+\Gamma \sim \text{N}(0, [\tau(D-\rho W)]^{-1})
+$$
+
 # Full Bayesian model
 
+We model the transformed number of releases as follows:
+
+#$$
+#y_i \sim \text{Poisson}(\exp\{X_i \gamma + \beta \cdot t + \phi_i + \log(\text{offset}_i\})
+#$$
+
 $$
-\tilde{y}_{it} = \alpha + \textbf{x}'_i \beta + \epsilon_{it}
+\tilde{y}_{it} = \psi_i + \phi_i t + x_i'\beta + \epsilon_{it}
 $$
 
-where $x_i'$ is a design vector of predictor variables for zip code $i$ and $\beta$ is the vector of coefficients for those predictor variables. 
+where $x_i'$ is a design vector of predictor variables for zip code $i$, $\beta$ is the vector of coefficients for those predictor variables, $t$ represents time, $\psi_i$ and $\phi_i$ are zip code specific intercepts and slopes, and $\epsilon_{it} \sim \text{N}(0, \sigma^2_{\epsilon})$. Since we do not expect every zip code to have unique coefficients, we impose CAR priors for $\psi_i$ and $\phi_i$, resulting in
+
+$$
+\begin{align*}
+\mathbf{\psi} &\sim \text{N}(\psi_0 \cdot \mathbf{1}, \tau^2_{\psi} \cdot \mathbf{\Sigma}^{-1}) \\
+\mathbf{\phi} &\sim \text{N}(\phi_0 \cdot \mathbf{1}, \tau^2_{\phi} \cdot \mathbf{\Sigma}^{-1}) 
+\end{align*}
+$$
+where $\mathbf{\Sigma}=\tau(D-\rho W)$. The posterior distribution can then be written as follows:
+
+$$
+\begin{align*}
+p(\beta, \psi, \phi, \psi_0, \phi_0, \rho, \tau | y) &\propto p(y|\beta, \psi, \phi, \psi_0, \phi_0, \rho, \tau)p(\psi|\psi_0,\tau^2_{\psi},\rho)p(\phi|\phi_0,\tau^2_{\phi},\rho) \\
+& \times p(\psi_0)p(\phi_0)p(\tau^2_{\psi})p(\tau^2_{\phi})p(\rho)p(\beta)
+\end{align*}
+$$
+
+We specify the following prior distributions:
+
+$$
+\begin{align*}
+\mathbf{\psi} &\sim \text{N}(\psi_0 \cdot \mathbf{1}, \tau^2_{\psi} \cdot \mathbf{\Sigma}^{-1}) \\
+\mathbf{\phi} &\sim \text{N}(\phi_0 \cdot \mathbf{1}, \tau^2_{\phi} \cdot \mathbf{\Sigma}^{-1}) \\
+p(\psi_0) &\propto 1 \\
+p(\phi_0) &\propto 1 \\
+p(\tau^2_{\psi}) &\sim \text{Inv-Gamma}(l_{\psi}, k_{\psi}) \\
+p(\tau^2_{\phi}) &\sim \text{Inv-Gamma}(l_{\phi}, k_{\phi}) \\
+p(\rho) &\sim \text{Uniform}(0,1) \\
+p(\mathbf{\beta}) &\sim \text{N}(0, \tau^2_{\beta} \cdot \mathbf{I}) \\
+p(\tau^2_{\beta}) &\sim \text{Inv-Gamma}(l_{\beta},k_{\beta}) \\
+p(\sigma^2_{\epsilon}) &\sim \text{Inv-Gamma}(l_{\epsilon}, k_{\epsilon})
+\end{align*}
+$$
 
 # Implementation in Stan
 
+First, we can load the necessary packages and set the MCMC options. 
 
+```{r, echo = FALSE}
+library(ggmcmc)
+library(dplyr)
+library(rstan)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+```
 
+Next, we setup the necessary data. 
 
+```{r, echo = FALSE}
+# remove 19112 zip code because not in census data
+tmp_philly_zip <- philly_zip_shape[!(philly_zip_shape$CODE %in% "19112"),]
+
+tmp_philly_nb <- poly2nb(tmp_philly_zip,
+                         queen = FALSE,
+                         row.names = tmp_philly_zip$CODE)
+philly_nb_mat <- nb2mat(tmp_philly_nb, style = "B",
+                        zero.policy = TRUE)
+
+# order dataframe by zip codes and years within zip codes
+# also add in numeric time variable
+release_by_zip_year_cov <- release_by_zip_year_cov %>%
+  dplyr::group_by(legal_zip_code) %>%
+  dplyr::arrange(ReleaseYear, .by_group = TRUE) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate(time = rep(seq(1, 10), 48))
+
+# remove 19112 from outcome and covariate mat
+release_by_zip_year_cov <- release_by_zip_year_cov[!(release_by_zip_year_cov$legal_zip_code %in% 19112),]
+design_mat <- as.matrix(release_by_zip_year_cov[,c("poverty_measure",
+                                                   "income_measure")])
+scaled_design_mat <- scale(design_mat)
+X <- model.matrix(~scaled_design_mat)
+  
+full_dat <- list(n = nrow(X),         # number of observations
+                 p = ncol(X),         # number of coefficients
+                 l = nrow(philly_nb_mat),  # number of zip codes
+                 X = X,               # design matrix
+                 y = c(release_by_zip_year_cov$count_tf),  # observed number of cases
+                 W = philly_nb_mat)               # adjacency matrix
+
+```
+
+Then, we can fit the model using `rstan`. 
+
+```{r, echo = FALSE}
+car_mod <- stan('stan/doc_car.stan', data = full_dat, 
+                iter = niter, chains = nchains, verbose = FALSE)
+```
 
 
