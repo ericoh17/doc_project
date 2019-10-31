@@ -55,6 +55,7 @@ From this poverty data, we create a single measure of poverty for each zip code 
 $$
 \text{poverty}_{i} = \sum_{j=1}^7 w_j q_{i,j}
 $$
+
 where $q_{i,j}$ is the proportion of households in zip code $i$ that are in poverty bracket $j$ and $w_j$ is the weight given to poverty bracket $j$. We use decreasing weights w = [1, 5/6, 4/6, 3/6, 2/6, 1/6, 0] to give higher poverty brackets more weight. Thus, the poverty measure ranges from 0 to 1, with higher values indicating a higher level of poverty.
 
 For more detail on how all of the above was done, see [link\_doc\_census.R](https://github.com/ericoh17/doc_project/blob/master/link_doc_census.R).
@@ -62,7 +63,7 @@ For more detail on how all of the above was done, see [link\_doc\_census.R](http
 CAR priors to account for spatial correlation
 =============================================
 
-Conditional autoregressive (CAR) models are commonly used as prior distributions for spatially correlated random effects with areal spatial data. Let $\Gamma = (\gamma_1,\ ldots,\gamma_n)′$ be a vector of random elements for n areal locations that are spatially correlated. The CAR model can then be represented using conditional distributions:
+Conditional autoregressive (CAR) models are commonly used as prior distributions for spatially correlated random effects with areal spatial data. Let $\Gamma = (\gamma_1,\ldots,\gamma_n)′$ be a vector of random elements for n areal locations that are spatially correlated. The CAR model can then be represented using conditional distributions:
 
 $$
 \gamma_i | \gamma_j, j \neq i  \sim \text{N}\left(\rho\sum_{j=1}^n w_{ij}\gamma_j, \tau_i^{-1}\right)
@@ -72,13 +73,15 @@ $$
 It can be proved using Brook's Lemma that the joint distribution of $\Gamma$ is given by
 
 $\Gamma \sim \text{N}\left(0, [D_{\tau}(I-\rho B)]^{-1}\right)$
- where: 
- * $D_{\tau} = \tau D$ 
- * $D = diag(m_i)$: an $n \times n$  diagonal matrix with $m_i=$ the number of neighbors for zip code $i$
- * $I$: an $n \times n$ identity matrix 
- * $\rho$: parameter controlling spatial dependence ($\rho = 0$ implies spatial independence and $\rho = 1$ results in an intrinsic conditional autoregressive model) 
- * $B$ = D^{-1}W$, the scaled adajency matrix 
- * $W$: the adajency matrix ($w_{ii}=0, $W_{ij}=1$  if neighbor; 0 otherwise)
+ where 
+ \begin{itemize}
+ \item $D_{\tau} = \tau D$
+ \item $D = diag(m_i)$: an $n \times n$  diagonal matrix with $m_i=$ the number of neighbors for zip code $i$
+ \item $I$: an $n \times n$ identity matrix 
+ \item $\rho$: parameter controlling spatial dependence ($\rho = 0$ implies spatial independence and $\rho = 1$ results in an intrinsic conditional autoregressive model) 
+ \item $B = D^{-1}W$, the scaled adajency matrix 
+ \item $W$: the adajency matrix ($w_{ii}=0, $W_{ij}=1$  if neighbor; 0 otherwise)
+\end{itemize}
 
 We can then write the CAR prior as:
 
