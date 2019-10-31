@@ -181,7 +181,7 @@ $$
 
 First, we can load the necessary packages and set the MCMC options. 
 
-```{r, echo = FALSE}
+```{r}
 library(ggmcmc)
 library(dplyr)
 library(rstan)
@@ -191,7 +191,7 @@ options(mc.cores = parallel::detectCores())
 
 Next, we setup the necessary data. 
 
-```{r, echo = FALSE}
+```{r}
 # remove 19112 zip code because not in census data
 tmp_philly_zip <- philly_zip_shape[!(philly_zip_shape$CODE %in% "19112"),]
 
@@ -227,7 +227,7 @@ full_dat <- list(n = nrow(X),         # number of observations
 
 Then, we can fit the model using `rstan`. 
 
-```{r, echo = FALSE}
+```{r, eval = FALSE}
 car_mod <- stan('stan/doc_car.stan', data = full_dat, 
                 iter = niter, chains = nchains, verbose = FALSE)
 ```
